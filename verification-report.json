@@ -1,0 +1,103 @@
+{
+  "tests_added": [
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "CredentialsIsExpiredTest::test_no_expiration_never_expires",
+      "covers": [
+        "minio/credentials/credentials.py:53"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "CredentialsIsExpiredTest::test_past_expiration_is_expired",
+      "covers": [
+        "minio/credentials/credentials.py:53"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "CredentialsIsExpiredTest::test_far_future_expiration_is_not_expired",
+      "covers": [
+        "minio/credentials/credentials.py:53"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "CredentialsIsExpiredTest::test_expiration_inside_ten_second_margin_is_expired",
+      "covers": [
+        "minio/credentials/credentials.py:53"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "CredentialsIsExpiredTest::test_expiration_outside_ten_second_margin_is_not_expired",
+      "covers": [
+        "minio/credentials/credentials.py:53"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "CredentialsIsExpiredTest::test_naive_expiration_is_treated_as_utc",
+      "covers": [
+        "minio/credentials/credentials.py:53"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "CredentialsIsExpiredTest::test_non_utc_expiration_is_normalized_to_utc",
+      "covers": [
+        "minio/credentials/credentials.py:53"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "PostPolicyFormDataTest::test_form_data_date_is_current_time",
+      "covers": [
+        "minio/models.py:2181"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "PostPolicyFormDataTest::test_form_data_credential_and_policy_use_same_date",
+      "covers": [
+        "minio/models.py:2181"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "PostPolicyFormDataTest::test_form_data_signature_matches_signed_date",
+      "covers": [
+        "minio/models.py:2181"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "PostPolicyFormDataTest::test_form_data_with_session_token",
+      "covers": [
+        "minio/models.py:2181"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "PresignedUrlTimestampTest::test_presigned_url_current_time_without_utc_constant",
+      "covers": [
+        "minio/time.py:118"
+      ]
+    },
+    {
+      "file": "tests/unit/current_time_behavior_test.py",
+      "test": "PresignedUrlTimestampTest::test_request_date_header_without_utc_constant",
+      "covers": [
+        "minio/time.py:118"
+      ]
+    }
+  ],
+  "unreachable": [],
+  "tests": {
+    "ran": 139,
+    "passed": 137,
+    "failed": 0,
+    "skipped": 2,
+    "command": "python -m pytest -q -p no:cacheprovider tests/unit"
+  }
+}
