@@ -1,0 +1,17 @@
+{
+  "tests_added": [
+    {"file": "tests/unit/utcnow_test.py", "test": "CredentialsIsExpiredTest.test_no_expiration_never_expires", "covers": []},
+    {"file": "tests/unit/utcnow_test.py", "test": "CredentialsIsExpiredTest.test_far_future_not_expired", "covers": ["minio/credentials/credentials.py:53"]},
+    {"file": "tests/unit/utcnow_test.py", "test": "CredentialsIsExpiredTest.test_past_expired", "covers": ["minio/credentials/credentials.py:53"]},
+    {"file": "tests/unit/utcnow_test.py", "test": "CredentialsIsExpiredTest.test_within_ten_second_margin_is_expired", "covers": ["minio/credentials/credentials.py:53"]},
+    {"file": "tests/unit/utcnow_test.py", "test": "CredentialsIsExpiredTest.test_ten_second_boundary", "covers": ["minio/credentials/credentials.py:53"]},
+    {"file": "tests/unit/utcnow_test.py", "test": "CredentialsIsExpiredTest.test_aware_expiration_converted_to_naive_utc", "covers": ["minio/credentials/credentials.py:53"]},
+    {"file": "tests/unit/utcnow_test.py", "test": "PostPolicyFormDataTest.test_form_data_uses_current_utc_time", "covers": ["minio/models.py:2181"]},
+    {"file": "tests/unit/utcnow_test.py", "test": "PostPolicyFormDataTest.test_form_data_with_session_token", "covers": ["minio/models.py:2181"]},
+    {"file": "tests/unit/utcnow_test.py", "test": "PostPolicyFormDataTest.test_form_data_real_clock", "covers": ["minio/models.py:2181"]},
+    {"file": "tests/unit/utcnow_test.py", "test": "UtcnowTest.test_utcnow_default_path", "covers": []},
+    {"file": "tests/unit/utcnow_test.py", "test": "UtcnowTest.test_utcnow_fallback_without_datetime_utc", "covers": ["minio/time.py:118"]}
+  ],
+  "unreachable": [],
+  "tests": {"ran": 135, "passed": 133, "failed": 0, "skipped": 2, "command": "python -m pytest -q -p no:cacheprovider tests/unit"}
+}
