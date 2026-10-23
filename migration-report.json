@@ -1,0 +1,32 @@
+{
+  "changed": [
+    {
+      "file": "minio/credentials/credentials.py",
+      "line": 53,
+      "note": "Replaced datetime.utcnow() with datetime.now(timezone.utc); appended .replace(tzinfo=None) after timedelta so comparison stays compatible with naive expiration from __post_init__"
+    },
+    {
+      "file": "minio/models.py",
+      "line": 2181,
+      "note": "Replaced datetime.utcnow() with datetime.now(timezone.utc); added timezone to datetime import"
+    },
+    {
+      "file": "minio/time.py",
+      "line": 118,
+      "note": "Replaced datetime.utcnow().replace(tzinfo=timezone.utc) with datetime.now(timezone.utc) (already timezone-aware)"
+    }
+  ],
+  "skipped": [],
+  "guesses": [
+    {
+      "file": "minio/credentials/credentials.py",
+      "line": 53,
+      "assumed": ".replace(tzinfo=None) after aware now()+timedelta preserves prior naive-UTC semantics against expiration stored without tzinfo in __post_init__"
+    }
+  ],
+  "tests": {
+    "ran": 124,
+    "passed": 122,
+    "command": "python -m pytest -q -p no:cacheprovider tests/unit"
+  }
+}
