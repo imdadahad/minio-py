@@ -1,0 +1,39 @@
+{
+  "changed": [
+    {
+      "file": "minio/credentials/credentials.py",
+      "line": 53,
+      "note": "Replaced datetime.utcnow() with datetime.now(timezone.utc); stripped tzinfo on threshold so comparison stays naive-UTC vs naive expiration."
+    },
+    {
+      "file": "minio/models.py",
+      "line": 2181,
+      "note": "Replaced datetime.utcnow() with datetime.now(timezone.utc); added timezone to datetime import."
+    },
+    {
+      "file": "minio/time.py",
+      "line": 118,
+      "note": "Replaced datetime.utcnow() with datetime.now(timezone.utc) in utcnow() fallback path."
+    }
+  ],
+  "skipped": [],
+  "guesses": [
+    {
+      "file": "minio/credentials/credentials.py",
+      "line": 53,
+      "assumed": ".replace(tzinfo=None) on the now()+timedelta expression is required because Credentials stores expiration as naive UTC."
+    },
+    {
+      "file": "minio/time.py",
+      "line": 118,
+      "assumed": "Keeping .replace(tzinfo=timezone.utc) after now(timezone.utc) matches the _UTC_IMPORTED branch and remains redundant but harmless."
+    }
+  ],
+  "tests": {
+    "ran": 124,
+    "passed": 122,
+    "failed": 0,
+    "skipped": 2,
+    "command": "python -m pytest -q -p no:cacheprovider tests/unit"
+  }
+}

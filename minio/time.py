@@ -115,7 +115,7 @@ def utcnow() -> datetime:
     """Timezone-aware wrapper to datetime.utcnow()."""
     if _UTC_IMPORTED:
         return datetime.now(UTC).replace(tzinfo=timezone.utc)
-    return datetime.utcnow().replace(tzinfo=timezone.utc)
+    return datetime.now(timezone.utc).replace(tzinfo=timezone.utc)
 
 
 def to_signer_date(value: datetime) -> str:
