@@ -15,8 +15,10 @@
 # limitations under the License.
 
 import os
+from datetime import datetime, timedelta, timezone
 from unittest import TestCase
 
+from minio.credentials import Credentials
 from minio.credentials.providers import (AWSConfigProvider, ChainedProvider,
                                          EnvAWSProvider, EnvMinioProvider,
                                          MinioClientConfigProvider,
@@ -203,6 +205,53 @@ class MinioClientConfigProviderTest(TestCase):
         self.assertEqual(creds.secret_key,
                          "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG")
         self.assertEqual(creds.session_token, None)
+
+
+class CredentialsIsExpiredTest(TestCase):
+    @staticmethod
+    def _credentials(expiration):
+        return Credentials(
+            access_key="access",
+            secret_key="secret",
+            expiration=expiration,
+        )
+
+    def test_past_expiration_is_expired(self):
+        expiration = datetime.now(timezone.utc) - timedelta(hours=1)
+        self.assertTrue(self._credentials(expiration).is_expired())
+
+    def test_far_future_expiration_is_not_expired(self):
+        expiration = datetime.now(timezone.utc) + timedelta(hours=1)
+        self.assertFalse(self._credentials(expiration).is_expired())
+
+    def test_expiration_within_ten_seconds_is_expired(self):
+        for seconds in (5, 9):
+            with self.subTest(seconds=seconds):
+                expiration = (
+                    datetime.now(timezone.utc) + timedelta(seconds=seconds)
+                )
+                self.assertTrue(self._credentials(expiration).is_expired())
+
+    def test_expiration_beyond_ten_seconds_is_not_expired(self):
+        expiration = datetime.now(timezone.utc) + timedelta(seconds=11)
+        self.assertFalse(self._credentials(expiration).is_expired())
+
+    def test_naive_expiration_is_read_as_utc(self):
+        now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
+        self.assertTrue(
+            self._credentials(now_utc - timedelta(minutes=1)).is_expired(),
+        )
+        self.assertFalse(
+            self._credentials(now_utc + timedelta(minutes=1)).is_expired(),
+        )
+
+    def test_aware_expiration_in_other_timezone_is_compared_by_instant(self):
+        offset = timezone(timedelta(hours=5, minutes=30))
+        now_utc = datetime.now(timezone.utc)
+        future = (now_utc + timedelta(minutes=10)).astimezone(offset)
+        past = (now_utc - timedelta(minutes=10)).astimezone(offset)
+        self.assertFalse(self._credentials(future).is_expired())
+        self.assertTrue(self._credentials(past).is_expired())
 
 
 class StaticProviderTest(TestCase):
