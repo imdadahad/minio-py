@@ -1,0 +1,32 @@
+{
+  "changed": [
+    {
+      "file": "minio/credentials/credentials.py",
+      "line": 53,
+      "note": "datetime.utcnow() -> datetime.now(timezone.utc). Credentials.__post_init__ normalizes expiration to naive UTC, so the stored value is wrapped with .replace(tzinfo=timezone.utc) before comparing against the aware now value."
+    },
+    {
+      "file": "minio/models.py",
+      "line": 2181,
+      "note": "utcnow = datetime.utcnow() -> datetime.now(timezone.utc); added timezone to the datetime import. The value flows only into get_credential_string, to_amz_date and post_presign_v4, which all go through time._to_utc and accept aware datetimes. No comparisons or arithmetic on it."
+    },
+    {
+      "file": "minio/time.py",
+      "line": 118,
+      "note": "datetime.utcnow().replace(tzinfo=timezone.utc) -> datetime.now(timezone.utc). The redundant .replace was dropped so tzinfo is set once. This branch only runs on Python without datetime.UTC (3.10); the 3.11+ branch already returned an aware value, so behavior there is unchanged."
+    }
+  ],
+  "skipped": [],
+  "guesses": [
+    {
+      "file": "minio/credentials/credentials.py",
+      "line": 53,
+      "assumed": "Credentials.expiration is always naive UTC at this point, because __post_init__ strips tzinfo after converting to UTC and the dataclass is frozen. So .replace(tzinfo=timezone.utc) is a correct reinterpretation and not a change of the instant. Reviewer should confirm no code path sets expiration after construction."
+    },
+    {
+      "file": "minio/time.py",
+      "line": 118,
+      "assumed": "Dropping the trailing .replace(tzinfo=timezone.utc) is equivalent, because datetime.now(timezone.utc) is already aware in UTC."
+    }
+  ]
+}

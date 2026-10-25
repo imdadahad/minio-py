@@ -50,6 +50,7 @@ class Credentials:
     def is_expired(self) -> bool:
         """Check whether this credentials expired or not."""
         return (
-            self.expiration < (datetime.utcnow() + timedelta(seconds=10))
+            self.expiration.replace(tzinfo=timezone.utc)
+            < (datetime.now(timezone.utc) + timedelta(seconds=10))
             if self.expiration else False
         )
