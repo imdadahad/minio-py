@@ -1,0 +1,27 @@
+{
+  "changed": [
+    {
+      "file": "minio/credentials/credentials.py",
+      "line": 53,
+      "note": "Replaced datetime.utcnow() with datetime.now(timezone.utc) in is_expired() comparison."
+    },
+    {
+      "file": "minio/models.py",
+      "line": 2181,
+      "note": "Replaced datetime.utcnow() with datetime.now(timezone.utc) for PostPolicy presign; added timezone import."
+    },
+    {
+      "file": "minio/time.py",
+      "line": 118,
+      "note": "Replaced datetime.utcnow().replace(tzinfo=timezone.utc) with datetime.now(timezone.utc) on Python <3.11 fallback path."
+    }
+  ],
+  "skipped": [],
+  "guesses": [
+    {
+      "file": "minio/credentials/credentials.py",
+      "line": 53,
+      "assumed": "expiration is stored as naive UTC (see __post_init__); compared using .replace(tzinfo=timezone.utc) so naive expiration matches aware now()."
+    }
+  ]
+}
