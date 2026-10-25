@@ -1,0 +1,78 @@
+{
+  "tests_added": [
+    {
+      "file": "tests/unit/credentials_test.py",
+      "test": "CredentialsIsExpiredTest::test_past_expiration_is_expired",
+      "covers": ["minio/credentials/credentials.py:53"]
+    },
+    {
+      "file": "tests/unit/credentials_test.py",
+      "test": "CredentialsIsExpiredTest::test_far_future_expiration_is_not_expired",
+      "covers": ["minio/credentials/credentials.py:53"]
+    },
+    {
+      "file": "tests/unit/credentials_test.py",
+      "test": "CredentialsIsExpiredTest::test_expiration_within_ten_seconds_is_expired",
+      "covers": ["minio/credentials/credentials.py:53"]
+    },
+    {
+      "file": "tests/unit/credentials_test.py",
+      "test": "CredentialsIsExpiredTest::test_expiration_beyond_ten_seconds_is_not_expired",
+      "covers": ["minio/credentials/credentials.py:53"]
+    },
+    {
+      "file": "tests/unit/credentials_test.py",
+      "test": "CredentialsIsExpiredTest::test_naive_expiration_is_read_as_utc",
+      "covers": ["minio/credentials/credentials.py:53"]
+    },
+    {
+      "file": "tests/unit/credentials_test.py",
+      "test": "CredentialsIsExpiredTest::test_aware_expiration_in_other_timezone_is_compared_by_instant",
+      "covers": ["minio/credentials/credentials.py:53"]
+    },
+    {
+      "file": "tests/unit/post_policy_test.py",
+      "test": "PostPolicyFormDataTest::test_form_data_signing_time_is_current_utc_time",
+      "covers": ["minio/models.py:2181"]
+    },
+    {
+      "file": "tests/unit/post_policy_test.py",
+      "test": "PostPolicyFormDataTest::test_form_data_credential_scope_uses_signing_date",
+      "covers": ["minio/models.py:2181"]
+    },
+    {
+      "file": "tests/unit/post_policy_test.py",
+      "test": "PostPolicyFormDataTest::test_form_data_policy_carries_signing_fields",
+      "covers": ["minio/models.py:2181"]
+    },
+    {
+      "file": "tests/unit/post_policy_test.py",
+      "test": "PostPolicyFormDataTest::test_form_data_signature_matches_policy_and_signing_date",
+      "covers": ["minio/models.py:2181"]
+    },
+    {
+      "file": "tests/unit/post_policy_test.py",
+      "test": "PostPolicyFormDataTest::test_form_data_includes_session_token_when_present",
+      "covers": ["minio/models.py:2181"]
+    },
+    {
+      "file": "tests/unit/post_policy_test.py",
+      "test": "PostPolicyFormDataTest::test_client_presigned_post_policy_returns_signed_form_data",
+      "covers": ["minio/models.py:2181"]
+    }
+  ],
+  "unreachable": [
+    {
+      "file": "minio/time.py",
+      "line": 118,
+      "reason": "Fallback branch of utcnow() that runs only when `from datetime import UTC` fails, i.e. Python < 3.11. setup.py declares support for 3.10, so this line is reachable only on 3.10. The verification environment runs Python 3.12.3, where the `_UTC_IMPORTED` branch at line 117 is always taken. Reaching line 118 here would require forcing the module flag, which was intentionally not done."
+    }
+  ],
+  "tests": {
+    "ran": 136,
+    "passed": 134,
+    "failed": 0,
+    "skipped": 2,
+    "command": "python -m pytest -q -p no:cacheprovider tests/unit"
+  }
+}
