@@ -1,0 +1,64 @@
+# Installed on each fork's default branch by `fleetmigrate ci-install`.
+# It runs one commit's tests under coverage and uploads the raw results.
+# It decides nothing: fleetmigrate reads the results and applies its checks.
+name: fleetmigrate tests
+run-name: ${{ inputs.tag }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag: {required: true, type: string}
+      sha: {required: true, type: string}
+      install: {required: true, type: string}
+      setup: {required: false, type: string, default: ""}
+      sources: {required: true, type: string}
+      pytest_args: {required: true, type: string}
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: |
+          python -m pip install -q --upgrade pip
+          python -m pip install -q coverage pytest
+          ${{ inputs.install }}
+      - name: Setup
+        if: inputs.setup != ''
+        run: ${{ inputs.setup }}
+      - name: Tests
+        run: |
+          mkdir -p out
+          set +e
+          python -m coverage run --data-file=out/.coverage --source=${{ inputs.sources }} \
+            -m pytest --rootdir=. ${{ inputs.pytest_args }} --junitxml=out/junit.xml > out/tail.txt 2>&1
+          echo $? > out/exit.txt
+          python -m coverage json --data-file=out/.coverage -o out/coverage.json --ignore-errors -q
+          python - <<'EOF'
+          import json, os
+          path = "out/coverage.json"
+          if os.path.exists(path):
+              data = json.load(open(path))
+              root = os.getcwd() + "/"
+              data["files"] = {k.removeprefix(root): v for k, v in data.get("files", {}).items()}
+              json.dump(data, open(path, "w"))
+          EOF
+          tail -c 4000 out/tail.txt > out/tail-short.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.tag }}
+          path: |
+            out/junit.xml
+            out/coverage.json
+            out/exit.txt
+            out/tail-short.txt
