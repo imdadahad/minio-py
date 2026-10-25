@@ -15,8 +15,10 @@
 # limitations under the License.
 
 import os
+from datetime import datetime, timezone
 from unittest import TestCase
 
+from minio.credentials import Credentials
 from minio.credentials.providers import (AWSConfigProvider, ChainedProvider,
                                          EnvAWSProvider, EnvMinioProvider,
                                          MinioClientConfigProvider,
@@ -212,3 +214,34 @@ class StaticProviderTest(TestCase):
         self.assertEqual(creds.access_key, "UXHW")
         self.assertEqual(creds.secret_key, "SECRET")
         self.assertEqual(creds.session_token, None)
+
+
+class CredentialsExpirationTest(TestCase):
+    def test_is_expired_without_expiration(self):
+        creds = Credentials("access", "secret")
+        self.assertFalse(creds.is_expired())
+
+    def test_is_expired_past_expiration(self):
+        creds = Credentials(
+            "access",
+            "secret",
+            expiration=datetime(2000, 1, 1),
+        )
+        self.assertTrue(creds.is_expired())
+
+    def test_is_expired_future_expiration(self):
+        creds = Credentials(
+            "access",
+            "secret",
+            expiration=datetime(2099, 12, 31),
+        )
+        self.assertFalse(creds.is_expired())
+
+    def test_is_expired_timezone_aware_expiration(self):
+        creds = Credentials(
+            "access",
+            "secret",
+            expiration=datetime(2099, 1, 1, tzinfo=timezone.utc),
+        )
+        self.assertIsNone(creds.expiration.tzinfo)
+        self.assertFalse(creds.is_expired())

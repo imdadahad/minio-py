@@ -26,7 +26,7 @@ from abc import ABC
 from binascii import crc32
 from collections import OrderedDict
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from io import BufferedIOBase, BytesIO
 from typing import Any, List, Optional, Tuple, Type, TypeVar, Union, cast
@@ -2178,7 +2178,7 @@ class PostPolicy:
             policy["conditions"].append(
                 ["content-length-range", self._lower_limit, self._upper_limit],
             )
-        utcnow = datetime.utcnow()
+        utcnow = datetime.now(timezone.utc)
         credential = get_credential_string(creds.access_key, utcnow, region)
         amz_date = to_amz_date(utcnow)
         policy["conditions"].append(
